@@ -31,7 +31,7 @@ class App extends Component {
     let tempMessages = this.state.messages.slice();
     tempMessages.push({
       id: this.state.nextId++,
-      username: userName,
+      username: userName || 'Anonymous',
       content: message
     });
     this.setState({
