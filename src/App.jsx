@@ -12,23 +12,20 @@ class App extends Component {
     };
     
     this.submitMessage = this.submitMessage.bind(this);
+    this.submitName = this.submitName.bind(this);
   }
   
+  submitName = (userName) => {
+    console.log("Name change:", userName);
+    this.setState({
+      currentUser: {name: userName}
+    })
+  }
+
   submitMessage = (message, userName) => {
     console.log("MESSAGE:", userName, message);
     this.socket.send(JSON.stringify({userName, message}));
-
-
-    // let tempMessages = this.state.messages.slice();
-    // tempMessages.push({
-    //   id: this.state.nextId++,
-    //   username: userName || 'Anonymous',
-    //   content: message
-    // });
-    // this.setState({
-    //   messages: tempMessages
-    // })
-  }
+  };
   
 componentDidMount() {
   console.log("componentDidMount <App />");
@@ -68,6 +65,7 @@ componentDidMount() {
         <ChatBar
           userName={this.state.currentUser.name}
           submitMessage={this.submitMessage}
+          submitName={this.submitName}
         ></ChatBar>
       </main>
     );
