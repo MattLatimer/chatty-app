@@ -5,7 +5,7 @@ import MessageList from './MessageList.jsx';
 class App extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       currentUser: {name: 'Bob'},
       messages: [
@@ -16,12 +16,28 @@ class App extends Component {
         },
         {
           id: 2,
-        username: 'Anonymous',
-        content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-      }
-    ]
-  };
-}
+          username: 'Anonymous',
+          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+        }
+      ],
+      nextId: 4
+    };
+    
+    this.submitMessage = this.submitMessage.bind(this);
+  }
+  
+  submitMessage = (message, userName) => {
+    console.log("MESSAGE:", message);
+    let tempMessages = this.state.messages.slice();
+    tempMessages.push({
+      id: this.state.nextId++,
+      username: userName,
+      content: message
+    });
+    this.setState({
+      messages: tempMessages
+    })
+  }
   
 componentDidMount() {
   console.log("componentDidMount <App />");
@@ -45,7 +61,10 @@ componentDidMount() {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}></MessageList>
-        <ChatBar userName={this.state.currentUser.name}></ChatBar>
+        <ChatBar
+          userName={this.state.currentUser.name}
+          submitMessage={this.submitMessage}
+        ></ChatBar>
       </main>
     );
   }
