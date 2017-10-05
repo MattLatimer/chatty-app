@@ -2,8 +2,11 @@ import React, {Component} from 'react';
 
 class ChatBar extends Component {
   constructor(props) {
-    super(props)
-    this.state = {userName: this.props.userName, message: ''};
+    super(props);
+    this.state = {
+      userName: this.props.userName,
+      message: ''
+    };
   }
   
   handleNameChange = (event) => {
@@ -15,7 +18,7 @@ class ChatBar extends Component {
   }
 
   enterName = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && this.state.userName !== this.props.userName) {
       this.props.submitName(this.state.userName);
     }
   };
@@ -25,10 +28,9 @@ class ChatBar extends Component {
       this.props.submitMessage(this.state.message, this.state.userName);
       this.setState({message: ''});
     }
-  }
+  };
 
   render() {
-    console.log('Rendering <ChatBar/>');
     return (
       <footer className="chatbar">
         <input 

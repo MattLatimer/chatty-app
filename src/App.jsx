@@ -6,7 +6,6 @@ import ChatBar from './ChatBar.jsx';
 class App extends Component {
   constructor(props) {
     super(props);
-    
     this.state = {
       currentUser: {name: ''},
       messages: [],
@@ -18,33 +17,24 @@ class App extends Component {
   }
   
   submitName = (userName) => {
-    console.log('Name change:', userName);
-    if (userName !== this.state.currentUser.name) {
-      this.socket.send(JSON.stringify(
-        [{type: 'postNotification', message: `${this.state.currentUser.name || 'Anonymous'} has changed their name to ${userName || 'Anonymous'}`}]
-      ));
-      this.setState({
-        currentUser: {name: userName}
-      })
-    }
+    this.socket.send(JSON.stringify(
+      {type: 'postNotification', message: `${this.state.currentUser.name || 'Anonymous'} has changed their name to ${userName || 'Anonymous'}`}
+    ))
+    this.setState({
+      currentUser: {name: userName}
+    })
   }
 
   submitMessage = (message, userName) => {
-    console.log('MESSAGE:', userName, message);
-    const output = [];
     if (userName !== this.state.currentUser.name) {
-      output.push({type: 'postNotification', message: `${this.state.currentUser.name || 'Anonymous'} has changed their name to ${userName || 'Anonymous'}`})
-      this.setState({
-        currentUser: {name: userName}
-      })
+      this.submitName(userName);
     }
-    output.push({type: 'postMessage', userName: userName, message: message})
-    this.socket.send(JSON.stringify(output));
+    this.socket.send(JSON.stringify(
+      {type: 'postMessage', userName: userName, message: message}
+    ));
   };
   
 componentDidMount() {
-  console.log("componentDidMount <App />");
-
   this.socket = new WebSocket(`ws://${location.hostname}:3001`);
   
   this.socket.onopen = (event) => {
@@ -52,20 +42,17 @@ componentDidMount() {
   };
 
   this.socket.onmessage = (incoming) => {
-    console.log("incoming message");
     const message = JSON.parse(incoming.data);
     if (message.type === 'userCount') {
-      this.setState({userCount: message.message})
+      this.setState({userCount: message.content})
     } else {
-      const messages = this.state.messages.concat(message);
-      this.setState({messages: messages});
+      const newMessages = this.state.messages.concat(message);
+      this.setState({messages: newMessages});
     }
   };
 }
 
   render() {
-    console.log('Rendering <App/>');
-
     return (
       <main>
         <NavBar userCount={this.state.userCount}/>
@@ -79,4 +66,5 @@ componentDidMount() {
     );
   }
 }
+
 export default App;
