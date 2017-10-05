@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import ChatBar from './ChatBar.jsx';
+import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
+import ChatBar from './ChatBar.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class App extends Component {
     this.state = {
       currentUser: {name: ''},
       messages: [],
+      userCount: 0
     };
     
     this.submitMessage = this.submitMessage.bind(this);
@@ -43,7 +45,7 @@ class App extends Component {
 componentDidMount() {
   console.log("componentDidMount <App />");
 
-  this.socket = new WebSocket("ws://localhost:3001");
+  this.socket = new WebSocket(`ws://${location.hostname}:3001`);
   
   this.socket.onopen = (event) => {
     console.log("Connected to Server.");
@@ -52,8 +54,12 @@ componentDidMount() {
   this.socket.onmessage = (incoming) => {
     console.log("incoming message");
     const message = JSON.parse(incoming.data);
-    const messages = this.state.messages.concat(message);
-    this.setState({messages: messages});
+    if (message.type === 'userCount') {
+      this.setState({userCount: message.message})
+    } else {
+      const messages = this.state.messages.concat(message);
+      this.setState({messages: messages});
+    }
   };
 }
 
@@ -62,9 +68,7 @@ componentDidMount() {
 
     return (
       <main>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
-        </nav>
+        <NavBar userCount={this.state.userCount}/>
         <MessageList messages={this.state.messages}></MessageList>
         <ChatBar
           userName={this.state.currentUser.name}

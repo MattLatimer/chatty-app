@@ -23,7 +23,8 @@ class Message extends Component {
       )
       break;
     default:
-      console.log(`Received message with unknown type: ${this.props.type}`)  
+      console.log(`Received message with unknown type: ${this.props.type}`)
+      return(null);
     }
   }
 }
