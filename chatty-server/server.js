@@ -21,19 +21,21 @@ const wss = new SocketServer({ server });
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
-
   const userCount = wss.clients.size;
   wss.clients.forEach((client) => {
     if (client.readyState === ws.OPEN) {
       client.send(JSON.stringify({id: uuid(), type: 'userCount', message: userCount}));
     }
   });
+  
+  const colorId = Math.floor(Math.random() * 4);
 
   ws.on('message', (incoming) => {
     console.log("bounce");
     const msgs = JSON.parse(incoming);
     msgs.forEach((msg) => {
       msg.id = uuid();
+      msg.colorId = colorId;
       switch (msg.type) {
       case 'postMessage':
         msg.type = 'incomingMessage';
