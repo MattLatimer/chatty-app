@@ -11,40 +11,33 @@ class App extends Component {
       messages: [],
       userCount: 0
     };
-    
-    this.submitMessage = this.submitMessage.bind(this);
-    this.submitName = this.submitName.bind(this);
   }
   
-  submitName = (userName) => {
+  submitName (userName) {
     this.socket.send(JSON.stringify(
       {type: 'postNotification', message: `${this.state.currentUser.name || 'Anonymous'} has changed their name to ${userName || 'Anonymous'}`}
-    ))
+    ));
     this.setState({
       currentUser: {name: userName}
-    })
+    });
   }
 
-  submitMessage = (message, userName) => {
+  submitMessage (message, userName) {
     if (userName !== this.state.currentUser.name) {
       this.submitName(userName);
     }
     this.socket.send(JSON.stringify(
       {type: 'postMessage', userName: userName, message: message}
     ));
-  };
+  }
   
 componentDidMount() {
   this.socket = new WebSocket(`ws://${location.hostname}:3001`);
-  
-  this.socket.onopen = (event) => {
-    console.log("Connected to Server.");
-  };
 
   this.socket.onmessage = (incoming) => {
     const message = JSON.parse(incoming.data);
     if (message.type === 'userCount') {
-      this.setState({userCount: message.content})
+      this.setState({userCount: message.content});
     } else {
       const newMessages = this.state.messages.concat(message);
       this.setState({messages: newMessages});
@@ -59,8 +52,8 @@ componentDidMount() {
         <MessageList messages={this.state.messages}></MessageList>
         <ChatBar
           userName={this.state.currentUser.name}
-          submitMessage={this.submitMessage}
-          submitName={this.submitName}
+          submitMessage={this.submitMessage.bind(this)}
+          submitName={this.submitName.bind(this)}
         ></ChatBar>
       </main>
     );

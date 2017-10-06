@@ -9,26 +9,26 @@ class ChatBar extends Component {
     };
   }
   
-  handleNameChange = (event) => {
+  handleNameChange (event) {
     this.setState({userName: event.target.value});
   }
 
-  handleMessageChange = (event) => {
+  handleMessageChange (event) {
     this.setState({message: event.target.value});
   }
 
-  enterName = (event) => {
+  enterName (event) {
     if (event.key === 'Enter' && this.state.userName !== this.props.userName) {
       this.props.submitName(this.state.userName);
     }
-  };
+  }
 
-  enterMessage = (event) => {
+  enterMessage (event) {
     if (event.key === 'Enter' && this.state.message !== '') {
       this.props.submitMessage(this.state.message, this.state.userName);
       this.setState({message: ''});
     }
-  };
+  }
 
   render() {
     return (
@@ -37,19 +37,21 @@ class ChatBar extends Component {
           className="chatbar-username"
           placeholder="Your Name (Optional)"
           value={this.state.userName}
-          onChange={this.handleNameChange}
-          onKeyPress={this.enterName}
+          onChange={this.handleNameChange.bind(this)}
+          onKeyPress={this.enterName.bind(this)}
         />
         <input
           className="chatbar-message"
           placeholder="Type a message and hit ENTER"
           value={this.state.message}
-          onChange={this.handleMessageChange}
-          onKeyPress={this.enterMessage}
+          onChange={this.handleMessageChange.bind(this)}
+          onKeyPress={this.enterMessage.bind(this)}
         />
       </footer>
     );
   }
 }
+
+ChatBar.propTypes
 
 export default ChatBar;

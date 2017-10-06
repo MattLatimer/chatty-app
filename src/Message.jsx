@@ -15,10 +15,11 @@ class Message extends Component {
           <div className='message system'>{this.props.content}</div>
         )
       default:
-        console.log(`Received message with unknown type: ${this.props.type}`)
         return(null);
     }
   }
 }
+
+Message.propTypes
 
 export default Message;

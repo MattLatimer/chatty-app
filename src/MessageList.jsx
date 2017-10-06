@@ -21,4 +21,6 @@ class MessageList extends Component {
   }
 }
 
+MessageList.propTypes
+
 export default MessageList;

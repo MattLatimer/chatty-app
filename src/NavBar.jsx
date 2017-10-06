@@ -12,4 +12,6 @@ class NavBar extends Component {
   }
 }
 
+NavBar.propTypes
+
 export default NavBar;
